@@ -85,8 +85,8 @@ class Tracer(object):
     exit_args -- dictionary of exit arguments for the trace, use ReturnValue to extract function return value
     """
     self.__detect_tag(tag)
-    self.enter_args = enter_args if not enter_args is None else {}
-    self.exit_args = exit_args if not exit_args is None else {}
+    self.enter_args = enter_args if enter_args is not None else {}
+    self.exit_args = exit_args if exit_args is not None else {}
 
   def __detect_tag(self, tag):
     if isinstance(tag, str):
@@ -106,7 +106,7 @@ class Tracer(object):
     if args is None:
       args = {}
     args_s = ",".join(["%s=%s" % item for item in args.items()])
-    tracer = "%s:t:%s:%s:" % (direction, self.tag, args_s)
+    tracer = f"{direction}:t:{self.tag}:{args_s}:"
     if sys.version_info[0] == 3:
       tracer = bytes(tracer, 'ascii')
     try:
@@ -205,7 +205,7 @@ class Tracer(object):
     """
     t = Tracer("", enter_args, exit_args)
     t.__detect_tag(tag)
-    t.tag = "%s.%s" % (self.tag, t.tag)
+    t.tag = f"{self.tag}.{t.tag}"
     return t
 
   def __get__(self, obj, objtype):

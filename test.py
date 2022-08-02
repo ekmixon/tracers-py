@@ -94,10 +94,12 @@ def test_nested_tracer_autonaming():
         u = 80
 
   func = r"[^:]*test\\\.py\\:[0-9]+\(test_nested_tracer_autonaming\)"
-  check_pipe_content(r">:t:" + func + "::>:t:" + func + r"\." + func + "::<:t:"
-    + func + r"\." + func + "::>:t:" + func + r"\." + func + "::>:t:" + func
-    + r"\." + func + r"\." + func + "::<:t:" + func + r"\." + func + r"\." +
-    func + "::<:t:" + func + r"\." + func + "::<:t:" + func + "::")
+  check_pipe_content(((((((((((((((((((((((((
+      ((f">:t:{func}::>:t:{func}" + r"\." + func + "::<:t:" + func) + r"\.") +
+      func) + "::>:t:") + func) + r"\.") + func) + "::>:t:") + func) + r"\.") +
+                                     func) + r"\.") + func) + "::<:t:") + func)
+                                + r"\.") + func) + r"\.") + func) + "::<:t:") +
+                           func) + r"\.") + func) + "::<:t:") + func) + "::"))
 
 def test_decorator_complex():
   @Tracer
@@ -151,9 +153,7 @@ def test_decorator_as_method():
 def test_recursive_functions():
   @Tracer(enter_args={"n": Args(0)}, exit_args={"ret": ReturnValue})
   def factorial(n):
-    if n == 1:
-      return 1
-    else:
-      return n * factorial(n-1)
+    return 1 if n == 1 else n * factorial(n-1)
+
   assert factorial(9) == 9*8*7*6*5*4*3*2*1
   check_pipe_content(">:t:factorial:n=9:<:t:factorial:ret=362880:")
